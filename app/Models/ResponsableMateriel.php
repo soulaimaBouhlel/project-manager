@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResponsableMateriel extends Model
 {
-    use HasFactory;
-}
+    public function equipements()
+    {
+        return $this->hasMany(Equipement::class);
+    }}

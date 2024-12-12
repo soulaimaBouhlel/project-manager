@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Employe;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class EmployeController extends Controller
      */
     public function index()
     {
-        //
+        $employes = Employe::all();
+        return view('employes.index', compact('employes'));
     }
 
     /**
@@ -23,7 +25,7 @@ class EmployeController extends Controller
      */
     public function create()
     {
-        //
+        return view('employes.create');
     }
 
     /**
@@ -34,7 +36,8 @@ class EmployeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $employe = Employe::create($request->all());
+        return redirect()->route('employes.index');
     }
 
     /**
@@ -45,7 +48,8 @@ class EmployeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employe = Employe::with(['projets', 'equipements', 'taches'])->findOrFail($id);
+        return view('employes.show', compact('employe'));
     }
 
     /**
@@ -56,7 +60,8 @@ class EmployeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $employe = Employe::findOrFail($id);
+        return view('employes.edit', compact('employe'));
     }
 
     /**
@@ -68,7 +73,9 @@ class EmployeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $employe = Employe::findOrFail($id);
+        $employe->update($request->all());
+        return redirect()->route('employes.index');
     }
 
     /**
@@ -79,6 +86,7 @@ class EmployeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Employe::findOrFail($id)->delete();
+        return redirect()->route('employes.index');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Projet;
 use Illuminate\Http\Request;
 
 class ProjetController extends Controller
@@ -13,7 +13,8 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        //
+        $projets = Projet::all();
+        return view('projets.index', compact('projets'));
     }
 
     /**
@@ -23,7 +24,7 @@ class ProjetController extends Controller
      */
     public function create()
     {
-        //
+        return view('projets.create');
     }
 
     /**
@@ -34,7 +35,8 @@ class ProjetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $projet = Projet::create($request->all());
+        return redirect()->route('projets.index');
     }
 
     /**
@@ -45,7 +47,8 @@ class ProjetController extends Controller
      */
     public function show($id)
     {
-        //
+        $projet = Projet::find($id);
+        return view('projets.show', compact('projet'));
     }
 
     /**
@@ -56,7 +59,8 @@ class ProjetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $projet = Projet::find($id);
+        return view('projets.edit', compact('projet'));
     }
 
     /**
@@ -68,7 +72,10 @@ class ProjetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $projet = Projet::find($id);
+        $projet->update($request->all());
+        return redirect()->route('projets.index');
+
     }
 
     /**
@@ -79,6 +86,7 @@ class ProjetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Projet::find($id)->delete();
+        return redirect()->route('projets.index');
     }
 }

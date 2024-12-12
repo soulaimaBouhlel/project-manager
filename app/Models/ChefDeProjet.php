@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChefDeProjet extends Model
 {
-    use HasFactory;
-}
+    public function projets()
+    {
+        return $this->hasMany(Projet::class);
+    }}
