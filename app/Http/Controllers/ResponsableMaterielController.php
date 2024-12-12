@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\ResponsableMateriel;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class ResponsableMaterielController extends Controller
      */
     public function index()
     {
-        //
+        $responsables = ResponsableMateriel::all();
+        return view('responsables.index', compact('responsables'));
     }
 
     /**
@@ -45,7 +47,8 @@ class ResponsableMaterielController extends Controller
      */
     public function show($id)
     {
-        //
+        $responsable = ResponsableMateriel::with('equipements')->findOrFail($id);
+        return view('responsables.show', compact('responsable'));
     }
 
     /**

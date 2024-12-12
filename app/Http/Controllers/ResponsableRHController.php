@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\ResponsableRH;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class ResponsableRHController extends Controller
      */
     public function index()
     {
-        //
+        $responsablesRH = ResponsableRH::all();
+        return view('responsablesrh.index', compact('responsablesRH'));
     }
 
     /**
@@ -45,7 +47,9 @@ class ResponsableRHController extends Controller
      */
     public function show($id)
     {
-        //
+        $responsableRH = ResponsableRH::with('employes')->findOrFail($id);
+        return view('responsablesrh.show', compact('responsableRH'));
+
     }
 
     /**

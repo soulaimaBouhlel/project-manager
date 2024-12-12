@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Tache;
 class TacheController extends Controller
 {
     /**
@@ -13,7 +13,8 @@ class TacheController extends Controller
      */
     public function index()
     {
-        //
+        $taches = Tache::all();
+        return view('taches.index', compact('taches'));
     }
 
     /**
@@ -23,7 +24,7 @@ class TacheController extends Controller
      */
     public function create()
     {
-        //
+        return view('taches.create');
     }
 
     /**
@@ -34,7 +35,8 @@ class TacheController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tache = Tache::create($request->all());
+        return redirect()->route('taches.index');
     }
 
     /**
@@ -45,7 +47,8 @@ class TacheController extends Controller
      */
     public function show($id)
     {
-        //
+        $tache = Tache::findOrFail($id);
+        return view('taches.show', compact('tache'));
     }
 
     /**
@@ -56,7 +59,8 @@ class TacheController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tache = Tache::findOrFail($id);
+        return view('taches.edit', compact('tache'));
     }
 
     /**
@@ -68,7 +72,9 @@ class TacheController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tache = Tache::findOrFail($id);
+        $tache->update($request->all());
+        return redirect()->route('taches.index');
     }
 
     /**
@@ -79,6 +85,7 @@ class TacheController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Tache::findOrFail($id)->delete();
+        return redirect()->route('taches.index');
     }
 }

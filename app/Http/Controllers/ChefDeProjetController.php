@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\ChefDeProjet;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class ChefDeProjetController extends Controller
      */
     public function index()
     {
-        //
+        $chefsDeProjet = ChefDeProjet::all();
+        return view('chefdeprojets.index', compact('chefsDeProjet'));
     }
 
     /**
@@ -45,7 +47,8 @@ class ChefDeProjetController extends Controller
      */
     public function show($id)
     {
-        //
+        $chefDeProjet = ChefDeProjet::with('projets')->findOrFail($id);
+        return view('chefdeprojets.show', compact('chefDeProjet'));
     }
 
     /**

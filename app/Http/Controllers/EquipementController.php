@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+use App\Models\Equipement;
 use Illuminate\Http\Request;
 
 class EquipementController extends Controller
@@ -13,7 +14,8 @@ class EquipementController extends Controller
      */
     public function index()
     {
-        //
+        $equipements = Equipement::all();
+        return view('equipements.index', compact('equipements'));
     }
 
     /**
@@ -23,7 +25,8 @@ class EquipementController extends Controller
      */
     public function create()
     {
-        //
+        return view('equipements.create');
+
     }
 
     /**
@@ -34,7 +37,8 @@ class EquipementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $equipement = Equipement::create($request->all());
+        return redirect()->route('equipements.index');
     }
 
     /**
@@ -45,7 +49,8 @@ class EquipementController extends Controller
      */
     public function show($id)
     {
-        //
+        $equipement = Equipement::findOrFail($id);
+        return view('equipements.show', compact('equipement'));
     }
 
     /**
@@ -56,7 +61,8 @@ class EquipementController extends Controller
      */
     public function edit($id)
     {
-        //
+        $equipement = Equipement::findOrFail($id);
+        return view('equipements.edit', compact('equipement'));
     }
 
     /**
@@ -68,7 +74,9 @@ class EquipementController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $equipement = Equipement::findOrFail($id);
+        $equipement->update($request->all());
+        return redirect()->route('equipements.index');
     }
 
     /**
@@ -79,6 +87,7 @@ class EquipementController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Equipement::findOrFail($id)->delete();
+        return redirect()->route('equipements.index');
     }
 }
