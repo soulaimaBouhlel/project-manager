@@ -49,7 +49,7 @@ class EmployeController extends Controller
 //    }
     public function store(Request $request) {
         $xmlContent = $request->getContent();
-        $xsdPath = storage_path('schemas/employe.xsd');
+        $xsdPath = storage_path('schemas/projet.xsd');
 
         try {
             validateXML($xmlContent, $xsdPath);
