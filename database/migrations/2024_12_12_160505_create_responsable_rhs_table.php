@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('responsable_r_h_s', function (Blueprint $table) {
+        Schema::create('responsable_rhs', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
             $table->timestamps();
         });
+
     }
 
     /**
