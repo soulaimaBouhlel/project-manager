@@ -48,24 +48,7 @@ class EmployeController extends Controller
 //        return redirect()->route('employes.index');
 //    }
     public function store(Request $request) {
-        $xmlContent = $request->getContent();
-        $xsdPath = storage_path('schemas/projet.xsd');
-
-        try {
-            validateXML($xmlContent, $xsdPath);
-            $xml = simplexml_load_string($xmlContent);
-
-            $employe = new Employe();
-            $employe->id = (int) $xml->id;
-            $employe->nom = (string) $xml->nom;
-            $employe->skills = implode(',', $xml->skills->skill ?? []);
-            $employe->indisponibilite = implode(',', $xml->indisponibilite->date ?? []);
-            $employe->save();
-
-            return response()->xml(['message' => 'Employee created successfully'], 201);
-        } catch (Exception $e) {
-            return response()->xml(['error' => $e->getMessage()], 400);
-        }
+       
     }
 
     /**
