@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('chef_de_projets', function (Blueprint $table) {
             $table->id();
+            $table->string('nom'); // Name of the project manager
             $table->timestamps();
-        });
+        });;
     }
 
     /**

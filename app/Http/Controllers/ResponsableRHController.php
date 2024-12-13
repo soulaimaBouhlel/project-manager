@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ResponsableRHController extends Controller
 {
+    protected $xmlValidationService;
+    public function __construct(XmlValidationService $xmlValidationService)
+    {
+        $this->xmlValidationService = $xmlValidationService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +22,7 @@ class ResponsableRHController extends Controller
         $responsablesRH = ResponsableRH::all();
         return view('responsablesrh.index', compact('responsablesRH'));
     }
+
 
     /**
      * Show the form for creating a new resource.
