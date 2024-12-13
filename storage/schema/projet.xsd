@@ -56,6 +56,11 @@
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+        <!-- Unique constraint for utilisateur based on nom -->
+        <xs:key name="uniqueUtilisateur">
+            <xs:selector xpath="utilisateur"/>
+            <xs:field xpath="nom"/>
+        </xs:key>
     </xs:element>
 
     <!-- Equipement (Equipment) Structure -->
@@ -71,6 +76,11 @@
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+        <!-- Unique constraint for equipement based on nom -->
+        <xs:key name="uniqueEquipement">
+            <xs:selector xpath="equipement"/>
+            <xs:field xpath="nom"/>
+        </xs:key>
     </xs:element>
 
     <!-- Projet (Project) Structure -->
@@ -99,6 +109,11 @@
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+        <!-- Unique constraint for projet based on nom -->
+        <xs:key name="uniqueProjet">
+            <xs:selector xpath="projet"/>
+            <xs:field xpath="nom"/>
+        </xs:key>
     </xs:element>
 
     <!-- Employe (Employee) Structure -->
@@ -117,21 +132,5 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
-    <!-- Unique Constraints for ensuring uniqueness -->
-    <xs:unique name="uniqueUtilisateur">
-        <xs:selector xpath="utilisateur"/>
-        <xs:field xpath="nom"/>
-    </xs:unique>
-
-    <xs:key name="uniqueEquipement">
-        <xs:selector xpath="equipement"/>
-        <xs:field xpath="nom"/>
-    </xs:key>
-
-    <xs:key name="uniqueProjet">
-        <xs:selector xpath="projet"/>
-        <xs:field xpath="nom"/>
-    </xs:key>
 
 </xs:schema>
