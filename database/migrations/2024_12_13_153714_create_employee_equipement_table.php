@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('affectations', function (Blueprint $table) {
+        Schema::create('employee_equipement', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employes')->onDelete('cascade'); // Corrected table name
-            $table->string('role');
-            $table->date('data_affectation');
+            // Update the foreign key reference to the correct table name ('employe' instead of 'employees')
+            $table->foreignId('employee_id')->constrained('employes')->onDelete('cascade');
+            $table->foreignId('equipement_id')->constrained('equipements')->onDelete('cascade');
             $table->timestamps();
         });
-
-
     }
 
     /**
@@ -31,7 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('affectations');
+        Schema::dropIfExists('employee_equipement');
     }
-
 };

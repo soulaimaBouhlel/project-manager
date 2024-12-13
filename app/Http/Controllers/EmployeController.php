@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 use App\Models\Employe;
 
+
 use Illuminate\Http\Request;
 
 class EmployeController extends Controller
 {
+    protected $xmlValidationService;
+
+    public function __construct(XmlValidationService $xmlValidationService)
+    {
+        $this->xmlValidationService = $xmlValidationService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,10 +42,30 @@ class EmployeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $employe = Employe::create($request->all());
-        return redirect()->route('employes.index');
+//    public function store(Request $request)
+//    {
+//        $employe = Employe::create($request->all());
+//        return redirect()->route('employes.index');
+//    }
+    public function store(Request $request) {
+        $xmlContent = $request->getContent();
+        $xsdPath = storage_path('schemas/employe.xsd');
+
+        try {
+            validateXML($xmlContent, $xsdPath);
+            $xml = simplexml_load_string($xmlContent);
+
+            $employe = new Employe();
+            $employe->id = (int) $xml->id;
+            $employe->nom = (string) $xml->nom;
+            $employe->skills = implode(',', $xml->skills->skill ?? []);
+            $employe->indisponibilite = implode(',', $xml->indisponibilite->date ?? []);
+            $employe->save();
+
+            return response()->xml(['message' => 'Employee created successfully'], 201);
+        } catch (Exception $e) {
+            return response()->xml(['error' => $e->getMessage()], 400);
+        }
     }
 
     /**
@@ -46,10 +74,24 @@ class EmployeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $employe = Employe::with(['projets', 'equipements', 'taches'])->findOrFail($id);
-        return view('employes.show', compact('employe'));
+    public function show($id) {
+        $employe = Employe::findOrFail($id);
+
+        $xml = new SimpleXMLElement('<Employe/>');
+        $xml->addChild('id', $employe->id);
+        $xml->addChild('nom', $employe->nom);
+
+        $skills = $xml->addChild('skills');
+        foreach (explode(',', $employe->skills) as $skill) {
+            $skills->addChild('skill', $skill);
+        }
+
+        $indisponibilite = $xml->addChild('indisponibilite');
+        foreach (explode(',', $employe->indisponibilite) as $date) {
+            $indisponibilite->addChild('date', $date);
+        }
+
+        return response($xml->asXML(), 200)->header('Content-Type', 'application/xml');
     }
 
     /**
@@ -84,9 +126,10 @@ class EmployeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        Employe::findOrFail($id)->delete();
-        return redirect()->route('employes.index');
+    public function destroy($id) {
+        $employe = Employe::findOrFail($id);
+        $employe->delete();
+
+        return response()->xml(['message' => 'Employee deleted successfully'], 200);
     }
 }

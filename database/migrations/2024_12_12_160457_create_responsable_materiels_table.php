@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('responsable_materiels', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
             $table->timestamps();
         });
     }

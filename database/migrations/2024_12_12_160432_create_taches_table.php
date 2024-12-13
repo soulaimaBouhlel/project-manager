@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('taches', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
+            $table->string('description');
+            $table->date('date_echeance');
+            $table->string('statut');
+            $table->foreignId('projet_id')->constrained()->onDelete('cascade'); // Foreign key to Projet
             $table->timestamps();
         });
     }
