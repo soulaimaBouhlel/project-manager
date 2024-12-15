@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('chef_de_projets', function (Blueprint $table) {
             $table->id();
-            $table->string('nom'); // Name of the project manager
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('telephone')->nullable();
+            $table->string('password');
             $table->timestamps();
         });;
     }

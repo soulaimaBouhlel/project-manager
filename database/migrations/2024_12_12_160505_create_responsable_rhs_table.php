@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('responsable_rhs', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->timestamps();
         });
 

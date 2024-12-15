@@ -1,87 +1,41 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\ResponsableMateriel;
 
 use Illuminate\Http\Request;
+use App\Services\XmlManager;
 
 class ResponsableMaterielController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    private $xmlManager;
+
+    public function __construct()
     {
-        $responsables = ResponsableMateriel::all();
-        return view('responsables.index', compact('responsables'));
+        $this->xmlManager = new XmlManager(storage_path('responsables_materiel.xml'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
+        // Validate the input
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'email' => 'required|email',
+            'telephone' => 'required|string',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Prepare the data for XML
+        $data = [
+            'nom' => $validated['nom'],
+            'email' => $validated['email'],
+            'telephone' => $validated['telephone'],
+        ];
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $responsable = ResponsableMateriel::with('equipements')->findOrFail($id);
-        return view('responsables.show', compact('responsable'));
-    }
+        // Serialize and save to XML
+        $existingData = $this->xmlManager->deserializeFromXml();
+        $existingData[] = $data;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $this->xmlManager->saveXmlToFile($this->xmlManager->serializeToXml($existingData));
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json(['message' => 'Responsable Materiel created successfully!']);
     }
 }

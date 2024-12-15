@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('login');
-            $table->string('mdp'); // Password
-            $table->string('role'); // Role: e.g., ResponsableRH, ResponsableMateriel
+            $table->string('name'); // User's name
+            $table->string('email')->unique(); // Email for login
+            $table->string('password'); // Hashed password
+            $table->enum('role', ['chef de projet', 'responsable materiel', 'responsable rh','employe'])->default('employe');
             $table->timestamps();
         });
     }

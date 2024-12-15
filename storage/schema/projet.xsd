@@ -7,8 +7,21 @@
             <xs:element name="nom" type="xs:string"/>
             <xs:element name="email" type="xs:string"/>
             <xs:element name="telephone" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+            <xs:element name="role">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="registered_user"/>
+                        <xs:enumeration value="employe"/>
+                        <xs:enumeration value="chef_de_projet"/>
+                        <xs:enumeration value="responsable_rh"/>
+                        <xs:enumeration value="responsable_materiel"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
         </xs:sequence>
     </xs:group>
+
 
     <!-- Group for Equipment Fields -->
     <xs:group name="equipementFields">

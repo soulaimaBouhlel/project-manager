@@ -1,94 +1,41 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\ResponsableRH;
 
 use Illuminate\Http\Request;
+use App\Services\XmlManager;
 
 class ResponsableRHController extends Controller
 {
-    protected $xmlValidationService;
-    public function __construct(XmlValidationService $xmlValidationService)
+    private $xmlManager;
+
+    public function __construct()
     {
-        $this->xmlValidationService = $xmlValidationService;
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $responsablesRH = ResponsableRH::all();
-        return view('responsablesrh.index', compact('responsablesRH'));
+        $this->xmlManager = new XmlManager(storage_path('responsables_rh.xml'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
+        // Validate the input
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'email' => 'required|email',
+            'telephone' => 'required|string',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Prepare the data for XML
+        $data = [
+            'nom' => $validated['nom'],
+            'email' => $validated['email'],
+            'telephone' => $validated['telephone'],
+        ];
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $responsableRH = ResponsableRH::with('employes')->findOrFail($id);
-        return view('responsablesrh.show', compact('responsableRH'));
+        // Serialize and save to XML
+        $existingData = $this->xmlManager->deserializeFromXml();
+        $existingData[] = $data;
 
-    }
+        $this->xmlManager->saveXmlToFile($this->xmlManager->serializeToXml($existingData));
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json(['message' => 'Responsable RH created successfully!']);
     }
 }
