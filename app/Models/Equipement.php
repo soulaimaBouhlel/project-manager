@@ -15,4 +15,9 @@ class Equipement extends Model
         'purchase_date',
         'status',
     ];
+    public function employes()
+    {
+        return $this->belongsToMany(Employe::class, 'employee_equipement', 'equipement_id', 'employe_id');
+
+    }
 }

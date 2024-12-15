@@ -10,6 +10,10 @@ use App\Services\XmlManager;
 
 class EmployeController extends Controller
 {
+    public function __construct(XmlManager $xmlManager)
+    {
+        $this->xmlManager = $xmlManager;
+    }
 
     public function create($user)
     {
@@ -72,4 +76,5 @@ class EmployeController extends Controller
             'employe' => $employe,
         ]);
     }
+
 }

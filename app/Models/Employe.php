@@ -37,7 +37,7 @@ class Employe extends Model
     // Define the relationship with Equipement (many-to-many)
     public function equipements()
     {
-        return $this->belongsToMany(Equipement::class);
+        return $this->belongsToMany(Equipement::class, 'employee_equipement', 'employe_id', 'equipement_id');
     }
     public function skills()
     {
