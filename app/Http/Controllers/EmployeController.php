@@ -45,6 +45,9 @@ class EmployeController extends Controller
             'employe' => $employe,
         ]);
     }
+
+   
+  
     public function activate($id)
     {
         $employe = Employe::findOrFail($id);
@@ -68,6 +71,7 @@ class EmployeController extends Controller
             'message' => 'Employee deactivated successfully.',
             'employe' => $employe,
         ]);
+<<<<<<< HEAD
     }
 
 
@@ -78,6 +82,11 @@ class EmployeController extends Controller
     }
 
 
+=======
+
+
+    
+>>>>>>> 0dbba2a1da0ee9872a117fd1add44f53817baf6b
 
 
 }
