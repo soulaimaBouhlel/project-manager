@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="assign_tasks">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="assignment" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <!-- Project ID -->
+                            <xs:element name="project_id" type="xs:integer" />
+
+                            <!-- List of assigned tasks -->
+                            <xs:element name="tasks">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="task" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="name" type="xs:string" />
+                                                    <xs:element name="description" type="xs:string" minOccurs="0"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
