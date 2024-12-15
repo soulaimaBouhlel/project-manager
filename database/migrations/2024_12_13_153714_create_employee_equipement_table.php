@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('employee_equipement', function (Blueprint $table) {
             $table->id();
             // Update the foreign key reference to the correct table name ('employe' instead of 'employees')
-            $table->foreignId('employee_id')->constrained('employes')->onDelete('cascade');
+            $table->foreignId('employe_id')->constrained('employes')->onDelete('cascade');
             $table->foreignId('equipement_id')->constrained('equipements')->onDelete('cascade');
             $table->timestamps();
         });

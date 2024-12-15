@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="equipment">
+    <!-- Root Element -->
+    <xs:element name="equipments">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="xs:string"/>
-                <xs:element name="type" type="xs:string"/>
-                <xs:element name="serial_number" type="xs:string"/>
-                <xs:element name="purchase_date" type="xs:date"/>
-                <xs:element name="status" type="xs:string"/>
+                <!-- List of Equipment -->
+                <xs:element name="equipment" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="type" type="xs:string"/>
+                            <xs:element name="serial_number" type="xs:string"/>
+                            <xs:element name="purchase_date" type="xs:date"/>
+                            <xs:element name="status" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

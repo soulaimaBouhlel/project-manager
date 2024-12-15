@@ -2,6 +2,7 @@
 
 
 namespace App\Http\Controllers;
+use App\Models\Employe;
 use App\Models\Equipement;
 use App\Services\XmlManager;
 use Illuminate\Http\Request;
@@ -63,4 +64,63 @@ class EquipementController extends Controller
             'status' => $equipment['status'],
         ]);
     }
+    public function assignEquipments(Request $request)
+    {
+        $xmlContent = $request->getContent();
+        $xsdPath = storage_path('schema/association.xsd'); // Ensure the XSD file path is correct
+
+        try {
+            $this->xmlManager->validateXML($xmlContent, $xsdPath);
+
+            // Parse XML
+            $data = $this->xmlManager->parseXML($xmlContent);
+
+            if (isset($data['association'])) {
+                $associations = $data['association'];
+                if (!isset($associations[0])) {
+                    $associations = [$associations]; // Ensure it's an array
+                }
+
+                foreach ($associations as $association) {
+                    $employeeId = $association['employe_id'];
+                    $equipmentIds = $association['equipments']['equipement_id'];
+
+                    if (!is_array($equipmentIds)) {
+                        $equipmentIds = [$equipmentIds]; // Ensure it's an array
+                    }
+
+                    // Attach equipment to the employee
+                    $employee = Employe::findOrFail($employeeId);
+                    $employee->equipements()->attach($equipmentIds);
+                }
+            }
+
+            return response()->json([
+                'message' => 'Equipments successfully assigned to employees.'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    public function addEquipmentToEmployee(array $associations)
+    {
+        // Extract employee ID and equipment IDs
+        foreach ($associations as $association) {
+            $employeeId = $association['employee_id'];
+            $equipmentIds = $association['equipement_ids']['equipement_id'];
+
+            if (!is_array($equipmentIds)) {
+                $equipmentIds = [$equipmentIds]; // Ensure it's an array
+            }
+
+            // Attach equipment to the employee
+            $employee = Employe::findOrFail($employeeId);
+            $employee->equipements()->attach($equipmentIds);
+        }
+
+        // Attach the equipment to the employee using the pivot table
+        $employee->equipements()->syncWithoutDetaching($equipmentIds);
+    }
+
 }
