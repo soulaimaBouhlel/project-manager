@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('equipements', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
-            $table->string('categorie');
-            $table->string('etat');
+            $table->string('name');
+            $table->string('type');
+            $table->string('status')->default('active');
+            $table->string('serial_number')->unique();
+            $table->date('purchase_date');
             $table->timestamps();
         });
     }

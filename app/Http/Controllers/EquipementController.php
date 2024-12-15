@@ -3,91 +3,64 @@
 
 namespace App\Http\Controllers;
 use App\Models\Equipement;
+use App\Services\XmlManager;
 use Illuminate\Http\Request;
 
 class EquipementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    protected $xmlManager;
+
+    public function __construct(XmlManager $xmlManager)
     {
-        $equipements = Equipement::all();
-        return view('equipements.index', compact('equipements'));
+        $this->xmlManager = $xmlManager;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('equipements.create');
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $equipement = Equipement::create($request->all());
-        return redirect()->route('equipements.index');
+        // Get the XML content from the request
+        $xmlContent = $request->getContent();
+
+        // Path to XSD schema for validation
+        $xsdPath = storage_path('schema/equipments.xsd'); // Make sure the XSD path is correct
+
+        try {
+            // Validate the XML content against the XSD schema
+            $this->xmlManager->validateXML($xmlContent, $xsdPath);
+
+            // Parse the XML content into an associative array
+            $data = $this->xmlManager->parseXML($xmlContent);
+
+            // Check if 'equipment' exists in the parsed data
+            if (isset($data['equipment'])) {
+                $equipments = $data['equipment'];
+                if (!isset($equipments[0])) {
+                    $equipments = [$equipments]; // Ensure it's an array even if only one equipment is provided
+                }
+
+                // Loop through each equipment and store it in the database
+                foreach ($equipments as $equipment) {
+                    $this->addEquipmentToDatabase($equipment); // Add equipment to the database
+                }
+            }
+
+            return response()->json([
+                'message' => 'Equipments processed and added successfully.',
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    private function addEquipmentToDatabase(array $equipment)
     {
-        $equipement = Equipement::findOrFail($id);
-        return view('equipements.show', compact('equipement'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $equipement = Equipement::findOrFail($id);
-        return view('equipements.edit', compact('equipement'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $equipement = Equipement::findOrFail($id);
-        $equipement->update($request->all());
-        return redirect()->route('equipements.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        Equipement::findOrFail($id)->delete();
-        return redirect()->route('equipements.index');
+        // Store the equipment in the database
+        Equipement::create([
+            'name' => $equipment['name'],
+            'type' => $equipment['type'],
+            'serial_number' => $equipment['serial_number'],
+            'purchase_date' => $equipment['purchase_date'],
+            'status' => $equipment['status'],
+        ]);
     }
 }
