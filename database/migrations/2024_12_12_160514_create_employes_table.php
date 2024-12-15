@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('employes', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->json('skills'); // Store skills as JSON
             $table->json('indisponible')->nullable(); // Dates the employee is unavailable
             $table->timestamps();
