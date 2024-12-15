@@ -2,40 +2,23 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\ResponsableRH;
 use Illuminate\Http\Request;
 use App\Services\XmlManager;
 
 class ResponsableRHController extends Controller
 {
-    private $xmlManager;
-
-    public function __construct()
+        public function create( $user)
     {
-        $this->xmlManager = new XmlManager(storage_path('responsables_rh.xml'));
-    }
+        $password = isset($user['password']) ? bcrypt($user['password']) : bcrypt('defaultpassword');
+        ResponsableRH::create([
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'telephone' => $user['telephone'], // Include optional telephone field
+            'password' => $password,
 
-    public function create(Request $request)
-    {
-        // Validate the input
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|email',
-            'telephone' => 'required|string',
         ]);
-
-        // Prepare the data for XML
-        $data = [
-            'nom' => $validated['nom'],
-            'email' => $validated['email'],
-            'telephone' => $validated['telephone'],
-        ];
-
-        // Serialize and save to XML
-        $existingData = $this->xmlManager->deserializeFromXml();
-        $existingData[] = $data;
-
-        $this->xmlManager->saveXmlToFile($this->xmlManager->serializeToXml($existingData));
-
         return response()->json(['message' => 'Responsable RH created successfully!']);
     }
 }

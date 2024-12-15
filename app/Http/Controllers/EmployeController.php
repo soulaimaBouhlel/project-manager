@@ -2,40 +2,70 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employe;
+use App\Models\Skill;
+
 use Illuminate\Http\Request;
 use App\Services\XmlManager;
 
 class EmployeController extends Controller
 {
-    private $xmlManager;
-
-    public function __construct()
+    public function create( $user)
     {
-        $this->xmlManager = new XmlManager(storage_path('employes.xml'));
+        $password = isset($user['password']) ? bcrypt($user['password']) : bcrypt('defaultpassword');
+        $employe = Employe::create([
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'telephone' => $user['telephone'], // Include optional telephone field
+            'password' => $password,
+            'status' => $userData['status'] ?? 'active',
+
+        ]);
+        if (!empty($data['skills'])) {
+            foreach ($data['skills'] as $skill) {
+                Skill::create([
+                    'employe_id' => $employe->id,
+                    'skill' => $skill,
+                ]);
+            }
+        }
+
+
+    }
+    public function update(Request $request, $id)
+    {
+        $employe = Employe::findOrFail($id);
+
+        // Update employee details
+        $employe->update($request->only(['name', 'email', 'status']));
+
+        return response()->json([
+            'message' => 'Employee updated successfully.',
+            'employe' => $employe,
+        ]);
+    }
+    public function activate($id)
+    {
+        $employe = Employe::findOrFail($id);
+        $employe->update(['status' => 'active']);
+
+        return response()->json([
+            'message' => 'Employee activated successfully.',
+            'employe' => $employe,
+        ]);
     }
 
-    public function create(Request $request)
+    /**
+     * Set an employee's status to inactive.
+     */
+    public function deactivate($id)
     {
-        // Validate the input
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'competences' => 'required|string',
-            'certifications' => 'required|string',
+        $employe = Employe::findOrFail($id);
+        $employe->update(['status' => 'inactive']);
+
+        return response()->json([
+            'message' => 'Employee deactivated successfully.',
+            'employe' => $employe,
         ]);
-
-        // Prepare the data for XML
-        $data = [
-            'nom' => $validated['nom'],
-            'competences' => $validated['competences'],
-            'certifications' => $validated['certifications'],
-        ];
-
-        // Serialize and save to XML
-        $existingData = $this->xmlManager->deserializeFromXml();
-        $existingData[] = $data;
-
-        $this->xmlManager->saveXmlToFile($this->xmlManager->serializeToXml($existingData));
-
-        return response()->json(['message' => 'Employe created successfully!']);
     }
 }
