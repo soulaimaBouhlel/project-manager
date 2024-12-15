@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <!-- Root Element -->
+    <xs:element name="associations">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="association">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <!-- Employee ID -->
+                            <xs:element name="employe_id" type="xs:integer"/>
+                            <!-- Equipments -->
+                            <xs:element name="equipments">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <!-- List of Equipment IDs -->
+                                        <xs:element name="equipement_id" type="xs:integer" minOccurs="1" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
