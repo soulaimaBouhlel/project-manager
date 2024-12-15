@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employe extends Model
 {
+    use HasFactory;
+
+    protected $table = 'employes'; // Ensure this matches your table name
+
+    // Add fillable attributes
+    protected $fillable = [
+        'name',      // User's name
+        'email',     // Email address
+        'telephone', // Telephone number
+        'password',
+        'status',// Password field
+        'user_id',
+
+        // Foreign key reference to the users table
+    ];
     // Define the relationship with Projet (many-to-many)
     public function projets()
     {
@@ -24,4 +39,10 @@ class Employe extends Model
     {
         return $this->belongsToMany(Equipement::class);
     }
+    public function skills()
+    {
+        return $this->hasMany(Skill::class);
+    }
+
+
 }
