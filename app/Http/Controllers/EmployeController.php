@@ -11,7 +11,7 @@ use App\Services\XmlManager;
 class EmployeController extends Controller
 {
 
-    public function create( $user)
+    public function create($user)
     {
         $password = isset($user['password']) ? bcrypt($user['password']) : bcrypt('defaultpassword');
         $employe = Employe::create([
@@ -33,6 +33,7 @@ class EmployeController extends Controller
 
 
     }
+
     public function update(Request $request, $id)
     {
         $employe = Employe::findOrFail($id);
@@ -45,7 +46,6 @@ class EmployeController extends Controller
             'employe' => $employe,
         ]);
     }
-
 
 
     public function activate($id)
@@ -72,9 +72,4 @@ class EmployeController extends Controller
             'employe' => $employe,
         ]);
     }
-
-
-
-
-
 }
