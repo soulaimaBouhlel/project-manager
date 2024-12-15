@@ -10,7 +10,7 @@ use App\Services\XmlManager;
 
 class EmployeController extends Controller
 {
-<<<<<<< HEAD
+
     public function create( $user)
     {
         $password = isset($user['password']) ? bcrypt($user['password']) : bcrypt('defaultpassword');
@@ -45,6 +45,9 @@ class EmployeController extends Controller
             'employe' => $employe,
         ]);
     }
+
+   
+  
     public function activate($id)
     {
         $employe = Employe::findOrFail($id);
@@ -68,31 +71,9 @@ class EmployeController extends Controller
             'message' => 'Employee deactivated successfully.',
             'employe' => $employe,
         ]);
-=======
 
-   
-    public function index()
-    {
-        $employes = Employe::all();
-        return view('employes.index', compact('employes'));
-    }
 
     
-    public function create()
-    {
-        return view('employes.create');
->>>>>>> bbb250b4a6399c54d074122607add4a3f4af1fad
-    }
-
-  
-    public function store(Request $request) {
-       
-    }
-
-    public function show($id) {
-       
-    }
-
 
   
 }
