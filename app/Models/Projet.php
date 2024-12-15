@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Projet extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'start_date',
+        'end_date',
+
+    ];
     public function taches()
     {
         return $this->hasMany(Tache::class);
