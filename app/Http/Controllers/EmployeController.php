@@ -7,35 +7,29 @@ use App\Services\XmlManager;
 
 class EmployeController extends Controller
 {
-    private $xmlManager;
 
-    public function __construct()
+   
+    public function index()
     {
-        $this->xmlManager = new XmlManager(storage_path('employes.xml'));
+        $employes = Employe::all();
+        return view('employes.index', compact('employes'));
     }
 
-    public function create(Request $request)
+    
+    public function create()
     {
-        // Validate the input
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'competences' => 'required|string',
-            'certifications' => 'required|string',
-        ]);
-
-        // Prepare the data for XML
-        $data = [
-            'nom' => $validated['nom'],
-            'competences' => $validated['competences'],
-            'certifications' => $validated['certifications'],
-        ];
-
-        // Serialize and save to XML
-        $existingData = $this->xmlManager->deserializeFromXml();
-        $existingData[] = $data;
-
-        $this->xmlManager->saveXmlToFile($this->xmlManager->serializeToXml($existingData));
-
-        return response()->json(['message' => 'Employe created successfully!']);
+        return view('employes.create');
     }
+
+  
+    public function store(Request $request) {
+       
+    }
+
+    public function show($id) {
+       
+    }
+
+
+  
 }
